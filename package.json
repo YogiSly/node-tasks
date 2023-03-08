@@ -3,5 +3,13 @@
   "version": "1.0.0",
   "main": "index.js",
   "repository": "https://github.com/YogiSly/node-tasks.git",
-  "license": "MIT"
+  "license": "MIT",
+  "bin": {
+    "current": "./index.js",
+    "add":"./add.js",
+    "sub":"./sub.js"
+  },
+  "dependencies": {
+    "yargs": "^17.7.1"
+  }
 }
