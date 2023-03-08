@@ -1,0 +1,7 @@
+{
+  "name": "node-tasks",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/YogiSly/node-tasks.git",
+  "license": "MIT"
+}
