@@ -1,30 +1,23 @@
 #!/usr/bin/env node
-const yargs = require('yargs/yargs');
-const { hideBin } = require('yargs/helpers');
+import * as readline from 'node:readline/promises';
+import { stdin as input, stdout as output } from 'node:process';
 
-const date = new Date();
+const quantity = Math.floor((Math.random()*100));
+const rl = readline.createInterface({ input, output });
+let answer = await rl.question('Угадайте число от 1 до 100:  ');
 
-const current = yargs(hideBin(process.argv))
-.option('d', {
-  alias: "day",
-  type: "boolean",
-})
-.option('m', {
-  alias: "month",
-  type: "boolean",
-})
-.option('y', {
-  alias: "year",
-  type: "boolean",
-})
-.argv;
-
-if (current.year) {
-  console.log(date.getFullYear());
-} else if (current.month) {
-  console.log(date.getMonth());
-} else if (current.day) {
-  console.log(date.getDate());
-} else {
-  console.log(date.toISOString());
+const checkQuantity = async () =>{
+  if (answer == quantity) {
+    console.log('Бинго!!!');
+    rl.close();
+  } else if (answer > quantity) {
+    answer = await rl.question('Загаданное число меньше:  ');
+    checkQuantity();
+  } else if (answer < quantity) {
+    answer = await rl.question('Загаданное число больше:  ');
+    checkQuantity();
+  }
 }
+
+checkQuantity();
+
