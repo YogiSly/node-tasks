@@ -5,10 +5,9 @@
   "repository": "https://github.com/YogiSly/node-tasks.git",
   "license": "MIT",
   "bin": {
-    "quantity": "./index.js"
+    "startera": "./index.js"
   },
   "dependencies": {
     "yargs": "^17.7.1"
-  },
-  "type": "module"
+  }
 }

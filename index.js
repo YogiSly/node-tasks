@@ -1,23 +1,45 @@
 #!/usr/bin/env node
-import * as readline from 'node:readline/promises';
-import { stdin as input, stdout as output } from 'node:process';
+const fs = require("fs");
+const fsPromises = fs.promises;
+const path = require("path");
+const readline = require("node:readline/promises");
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout,
+});
 
-const quantity = Math.floor((Math.random()*100));
-const rl = readline.createInterface({ input, output });
-let answer = await rl.question('Угадайте число от 1 до 100:  ');
+const questionNumber = Math.round(Math.random()) + 1;
+const win = "Вы выиграли!";
+const lose = "Вы проиграли";
+const date = Date();
 
-const checkQuantity = async () =>{
-  if (answer == quantity) {
-    console.log('Бинго!!!');
-    rl.close();
-  } else if (answer > quantity) {
-    answer = await rl.question('Загаданное число меньше:  ');
-    checkQuantity();
-  } else if (answer < quantity) {
-    answer = await rl.question('Загаданное число больше:  ');
-    checkQuantity();
+const writeData = async (status, answer, name) => {
+  const file = path.join(__dirname, name);
+  const openData = await fsPromises.open("./" + name, "a+");
+  const data = await openData.readFile("utf8");
+  let newData = {};
+  data ? (newData = JSON.parse(data)) : (newData = { log: [] });
+  newData.log.push({ questionNumber, answer, status, date });
+  fs.writeFileSync(file, JSON.stringify(newData));
+};
+
+const enterName = () =>
+  rl
+    .question("Введите название файла для записи результата - ")
+    .then((fileName) => `${fileName}.json`);
+
+rl.question("Угадайте Орёл или Решка(Орёл - 1, Решка - 2) - ").then(
+  async (answer) => {
+    if (answer == questionNumber) {
+      console.log(win);
+      const name = await enterName();
+      writeData(win, answer, name);
+      rl.close();
+    } else {
+      console.log(lose);
+      const name = await enterName();
+      writeData(lose, answer, name);
+      rl.close();
+    }
   }
-}
-
-checkQuantity();
-
+);
