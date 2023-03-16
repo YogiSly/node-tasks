@@ -4,10 +4,11 @@
   "main": "index.js",
   "repository": "https://github.com/YogiSly/node-tasks.git",
   "license": "MIT",
-  "bin": {
-    "starter": "./index.js",
-    "analysis":"./analysis.js"
+  "scripts": {
+    "dev": "node -r dotenv/config index.js"
   },
-  "dependencies": {
+  "dependencies": {},
+  "devDependencies": {
+    "dotenv": "^16.0.3"
   }
 }

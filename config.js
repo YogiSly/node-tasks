@@ -1,0 +1,1 @@
+exports.API_WEATHER_KEY=process.env.API_WEATHER_KEY;
