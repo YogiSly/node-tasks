@@ -1,6 +1,5 @@
-import express, { json } from 'express';
+import express from 'express';
 import { v4 as uuid } from 'uuid';
-import { process } from "node";
 
 class Todo {
   constructor(title = "", desc = "", id = uuid()) {
@@ -12,11 +11,14 @@ class Todo {
 
 
 const stor = {
-  todo: []
+  todo: [
+    new Todo(),
+    new Todo(),
+  ]
 };
 
 const app = express();
-app.use(json());
+app.use(express.json());
 
 app.get('/api/todo', (req, res) => {
   const { todo } = stor;
@@ -65,6 +67,7 @@ app.delete('/api/todo/:id', (req, res) => {
   const idx = todo.findIndex(el => el.id === id);
   if (idx !== -1) {
     todo.splice(idx, 1)
+    res.json(true)
   } else {
     res.status(404);
     res.json('404 | страница не найдена');
