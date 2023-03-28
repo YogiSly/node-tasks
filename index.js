@@ -1,78 +1,19 @@
-import express from 'express';
-import { v4 as uuid } from 'uuid';
+const express = require('express');
 
-class Todo {
-  constructor(title = "", desc = "", id = uuid()) {
-    this.title = title;
-    this.desc = desc;
-    this.id = id;
-  }
-}
-
-
-const stor = {
-  todo: [
-    new Todo(),
-    new Todo(),
-  ]
-};
+const logger = require('./middleware/logger')
+const error404 = require('./middleware/err-404')
+const indexRouter = require('./routes/index')
+const demoRouter = require('./routes/demo')
 
 const app = express();
-app.use(express.json());
 
-app.get('/api/todo', (req, res) => {
-  const { todo } = stor;
-  res.json(todo);
-})
-app.get('/api/todo/:id', (req, res) => {
-  const { todo } = stor;
-  const { id } = req.params;
-  const idx = todo.findIndex(el => el.id === id);
+app.use(logger)
 
-  if (idx !== -1) {
-    res.json(todo[idx]);
-  } else {
-    res.status(404);
-    res.json('404 | страница не найдена');
-  }
-})
+app.use('/public', express.static(__dirname + '/public'))
+app.use('/', indexRouter)
+app.use('/demo', demoRouter)
 
-app.post('/api/todo', (req, res) => {
-  const { todo } = stor;
-  const { title, desc } = req.body
-  const newTodo = new Todo(title, desc);
-  todo.push(newTodo);
-  res.status(201);
-  res.json(newTodo);
-});
-app.put('/api/todo/:id', (req, res) => {
-  const { todo } = stor;
-  const { title, desc } = req.body;
-  const { id } = req.params;
-  const idx = todo.findIndex(el => el.id === id);
-  if (idx !== -1) {
-    todo[id] = {
-      ...todo[idx], title, desc
-    }
-    res.json(todo[idx])
-  } else {
-    res.status(404);
-    res.json('404 | страница не найдена');
-  }
-
-});
-app.delete('/api/todo/:id', (req, res) => {
-  const { todo } = stor;
-  const { id } = req.params;
-  const idx = todo.findIndex(el => el.id === id);
-  if (idx !== -1) {
-    todo.splice(idx, 1)
-    res.json(true)
-  } else {
-    res.status(404);
-    res.json('404 | страница не найдена');
-  }
-});
+app.use(error404)
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT);
